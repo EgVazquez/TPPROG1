@@ -1,0 +1,40 @@
+<?php
+
+require_once 'RepositorioUsuario.php';
+require_once 'user.php';
+
+class ControladorSesion
+{
+    protected $usuario = null;
+
+    public function login($user, $clave)
+    {
+        $repo = new RepositorioUsuario();
+        $usuario = $repo->login($user, $clave);
+
+        if ($usuario === false) {
+            //Falló el login
+            return [ false, "Error de credenciales" ];
+        } else {
+            //Login correcto, ingresar al sistema
+            session_start();
+            $_SESSION['usuario'] = serialize($usuario);
+            return [ true, "Usuario correctamente autenticado"];
+        }
+    }
+
+    public function create($user, $name, $surname, $clave)
+    {
+        $repo = new RepositorioUsuario();
+        $usuario = new Usuario($user, $name, $surname);
+        $id = $repo->save($usuario, $clave);
+        if ( $id === false) {
+            return [false, "Error al crear el usuario"];
+        } else {
+            $usuario->setId($id);
+            session_start();
+            $_SESSION['usuario'] = serialize($usuario);
+            return [true, "Usuario creado correctamente"];
+        }
+    }
+}
