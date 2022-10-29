@@ -14,21 +14,21 @@ class ControladorSesion
 
         if ($usuario === false) {
             //Falló el login
-            return [ false, "Error de credenciales" ];
+            return [false, "Error de credenciales"];
         } else {
             //Login correcto, ingresar al sistema
             session_start();
             $_SESSION['usuario'] = serialize($usuario);
-            return [ true, "Usuario correctamente autenticado"];
+            return [true, "Usuario correctamente autenticado"];
         }
     }
 
-    public function create($user, $name, $surname, $clave)
+    public function create($user, $name, $surname, $password)
     {
         $repo = new RepositorioUsuario();
-        $usuario = new Usuario($user, $name, $surname);
-        $id = $repo->save($usuario, $clave);
-        if ( $id === false) {
+        $usuario = new Users($user, $name, $surname);
+        $id = $repo->save($user, $password);
+        if ($id === false) {
             return [false, "Error al crear el usuario"];
         } else {
             $usuario->setId($id);
