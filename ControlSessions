@@ -1,16 +1,16 @@
 <?php
 
-require_once 'RepositorioUsuario.php';
+require_once 'UserRepository.php';
 require_once 'user.php';
 
-class ControladorSesion
+class ControlSessions
 {
     protected $usuario = null;
 
-    public function login($user, $clave)
+    public function login($user, $password)
     {
         $repo = new RepositorioUsuario();
-        $usuario = $repo->login($user, $clave);
+        $usuario = $repo->login($user, $password);
 
         if ($usuario === false) {
             //Falló el login
@@ -26,7 +26,7 @@ class ControladorSesion
     public function create($user, $name, $surname, $password)
     {
         $repo = new RepositorioUsuario();
-        $usuario = new Users($user, $name, $surname);
+        $usuario = new User($user, $name, $surname);
         $id = $repo->save($user, $password);
         if ($id === false) {
             return [false, "Error al crear el usuario"];

@@ -27,35 +27,35 @@ class RepositorioUsuario
 
     public function login($user, $password)
     {
-        $q= "SELECT id,password, name, surname, USER FROM users WHERE USER = ?";
+        $q = "SELECT id,password, name, surname FROM users WHERE user = ?";
         $query = self::$conexion->prepare($q);
         $query->bind_param("s", $user);
 
         if ($query->execute()) {
-            $query->bind_result($id, $clave_encriptada, $name, $surname, $user);
+            $query->bind_result($id, $clave_encriptada, $name, $surname);
             if ($query->fetch()) {
-                if (password_verify($password, $clave_encriptada)) {
-                    return new users($user, $name, $surname, $id);
+                if (password_verify($password, $clave_encriptada) === true) {
+                    return new user($user, $name, $surname, $id);
                 }
             }
         }
         return false;
     }
 
-    public function save(Usuario $usuario, $clave)
+    public function save(User $user, $password)
     {
-        $q = "INSERT INTO usuarios (usuario, nombre, apellido, clave) ";
-        $q .= "VALUES (?, ?, ?, ?)";
+        $q = "INSERT INTO users (user, name, surname, password) ";
+        $q.= "VALUES (?, ?, ?, ?)";
         $query = self::$conexion->prepare($q);
-        $nombre_usuario = $usuario->getUsuario();
-        $nombre = $usuario->getNombre();
-        $apellido = $usuario->getApellido();
-        $clave_encriptada = password_hash($clave, PASSWORD_DEFAULT);
+        $user = $user->getUsuario();
+        $name = $user->getNombre();
+        $surname = $user->getApellido();
+        $clave_encriptada = password_hash($password, PASSWORD_DEFAULT);
         $query->bind_param(
             "ssss",
-            $nombre_usuario,
-            $nombre,
-            $apellido,
+            $user,
+            $name,
+            $surname,
             $clave_encriptada
         );
         if ($query->execute()) {

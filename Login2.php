@@ -1,15 +1,15 @@
 <?php
-require_once 'clases/ControladorSesion.php';
+require_once 'ControlSessions.php';
 
-if (empty($_POST['usuario']) || empty($_POST['clave'])) {
+if (empty($_POST['user']) || empty($_POST['password'])) {
     $redirigir = 'index.php?mensaje=Error: Falta un campo obligatorio';
 } else {
-    $cs = new ControladorSesion();
-    $login = $cs->login($_POST['usuario'], $_POST['clave']);
+    $cs = new ControlSessions();
+    $login = $cs->login($_POST['user'], $_POST['password']);
     if ($login[0] === true) {
-        $redirigir = 'home.php';
+        $redirigir = 'principal.php';
     } else {
         $redirigir = 'index.php?mensaje=' . $login[1];
     }
 }
-header('Location: '.$redirigir);
+header('Location: ' . $redirigir);
